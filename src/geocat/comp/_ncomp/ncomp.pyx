@@ -177,3 +177,20 @@ def _linint2(np.ndarray xi, np.ndarray yi, np.ndarray fi, np.ndarray xo, np.ndar
     fo[fo == fo_msg] = np.nan
 
     return fo
+
+
+
+def mjo_cross_segment(x, y, segLength, segOverLap, opt=False):
+    cdef ncomp.ncomp_array* ncomp_x = np_to_ncomp_array(x)
+    cdef ncomp.ncomp_array* ncomp_y = np_to_ncomp_array(y)
+    cdef ncomp.ncomp_array* out_array
+
+    cdef int ier
+    with nogil:
+        ier = ncomp.mjo_cross_segment(ncomp_x, ncomp_y, &out_array)
+
+    return ncomp_to_np_array(out_array)
+
+def mjo_cross_coh2pha():
+    pass
+    #int mjo_cross_coh2pha(ncomp_array*) nogil;
