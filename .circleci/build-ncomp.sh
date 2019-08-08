@@ -8,8 +8,6 @@ conda install git
 conda config --add channels conda-forge
 git clone ${NCOMP_GIT_REPO}
 cd ncomp
-git checkout circleci
-echo "conda env create -f ci/environment-dev-$(uname).yml --name ${NCOMP_ENV_NAME} --quiet"
 conda env create -f ci/environment-dev-$(uname).yml --name ${NCOMP_ENV_NAME} --quiet
 conda env list
 source activate ${NCOMP_ENV_NAME}

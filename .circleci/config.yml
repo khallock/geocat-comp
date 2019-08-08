@@ -20,8 +20,11 @@ default-job: &default-job
     - restore_cache:
         key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Environment.CIRCLE_WORKFLOW_UPSTREAM_JOB_IDS }}
     - run:
-        name: Install conda environment
-        command: ./ci/install-circle.sh
+        name: Build geocat-comp
+        command: ./.circleci/install-circle.sh
+    - run:
+        name: Run tests
+        command: ./.circleci/${TEST_SCRIPT}
 
 
 jobs:
@@ -35,7 +38,7 @@ jobs:
       - checkout
       - run:
           name: Build NComp
-          command: ./ci/build-ncomp.sh
+          command: ./.circleci/build-ncomp.sh
       - save_cache:
           key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Environment.CIRCLE_WORKFLOW_JOB_ID }}
           paths:
