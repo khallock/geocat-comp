@@ -17,13 +17,8 @@ default-job: &default-job
     - image: conda/miniconda3:latest
   steps:
     - checkout
-    - attach_workspace:
-        at: /usr/local/envs
-#    - restore_cache:
-#        key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Environment.CIRCLE_WORKFLOW_UPSTREAM_JOB_IDS }}
-#        paths:
-#          - "/usr/local/envs/${NCOMP_ENV_NAME}"
-#          - "/usr/local/pkgs"
+    - restore_cache:
+        key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Environment.CIRCLE_WORKFLOW_UPSTREAM_JOB_IDS }}
     - run:
         name: Install conda environment
         command: ./ci/install-circle.sh
@@ -35,21 +30,17 @@ jobs:
       - image: conda/miniconda3:latest
     environment:
       NCOMP_ENV_NAME: "build-ncomp"
+      NCOMP_GIT_REPO: "https://github.com/khallock/ncomp.git"
     steps:
       - checkout
       - run:
           name: Build NComp
           command: ./ci/build-ncomp.sh
-      - persist_to_workspace:
-          root: /usr/local/envs
+      - save_cache:
+          key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Environment.CIRCLE_WORKFLOW_JOB_ID }}
           paths:
-            - build-ncomp
-#      - save_cache:
-#          key: deps-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-{{ .Environment.CIRCLE_WORKFLOW_JOB_ID }}
-#          paths:
-#            - "/usr/local/envs/${NCOMP_ENV_NAME}"
-#            - "/usr/local/pkgs"
-
+            - /usr/local/envs/build-ncomp
+            - /usr/local/pkgs
 
     
   "python-3.6":
